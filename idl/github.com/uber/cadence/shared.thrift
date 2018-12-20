@@ -187,6 +187,7 @@ enum DecisionTaskFailedCause {
   FORCE_CLOSE_DECISION,
   FAILOVER_CLOSE_DECISION,
   BAD_SIGNAL_INPUT_SIZE,
+  RESET_WORKFLOW,
 }
 
 enum CancelExternalWorkflowExecutionFailedCause {
@@ -461,6 +462,11 @@ struct DecisionTaskFailedEventAttributes {
   30: optional DecisionTaskFailedCause cause
   35: optional binary details
   40: optional string identity
+  // for reset workflow
+  50: optional string reason
+  60: optional string forkRunId
+  70: optional string currRunId
+  80: optional i64 (js.type = "Long") currRunNextEventId
 }
 
 struct ActivityTaskScheduledEventAttributes {
@@ -1071,6 +1077,14 @@ struct TerminateWorkflowExecutionRequest {
   50: optional string identity
 }
 
+struct ResetWorkflowExecutionRequest {
+  10: optional string domain
+  20: optional WorkflowExecution workflowExecution
+  30: optional string reason
+  40: optional i64 (js.type = "Long") decisionTaskCompletedEventId
+  50: optional string requestId
+}
+
 struct ListOpenWorkflowExecutionsRequest {
   10: optional string domain
   20: optional i32 maximumPageSize
@@ -1143,6 +1157,8 @@ struct PendingActivityInfo {
   30: optional PendingActivityState state
   40: optional binary heartbeatDetails
   50: optional i64 (js.type = "Long") lastHeartbeatTimestamp
+  60: optional i64 (js.type = "Long") lastStartedTimestamp
+  70: optional i32 attempt
 }
 
 struct DescribeWorkflowExecutionResponse {
@@ -1220,4 +1236,21 @@ struct RetryPolicy {
 
   // Expiration time for the whole retry process.
   60: optional i32 expirationIntervalInSeconds
+}
+
+// HistoryBranchRange represents a piece of range for a branch.
+struct HistoryBranchRange{
+  // branchID of original branch forked from
+  10: optional string branchID
+  // beinning node for the range, inclusive
+  20: optional i64 beginNodeID
+  // ending node for the range, exclusive
+  30: optional i64 endNodeID
+}
+
+// For history persistence to serialize/deserialize branch details
+struct HistoryBranch{
+  10: optional string treeID
+  20: optional string branchID
+  30: optional list<HistoryBranchRange>  ancestors
 }
