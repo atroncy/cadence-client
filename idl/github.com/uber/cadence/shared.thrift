@@ -1085,6 +1085,10 @@ struct ResetWorkflowExecutionRequest {
   50: optional string requestId
 }
 
+struct ResetWorkflowExecutionResponse {
+  10: optional string runId
+}
+
 struct ListOpenWorkflowExecutionsRequest {
   10: optional string domain
   20: optional i32 maximumPageSize

@@ -295,11 +295,11 @@ func (w *workflowServiceMetricsWrapper) TerminateWorkflowExecution(ctx context.C
 	return err
 }
 
-func (w *workflowServiceMetricsWrapper) ResetWorkflowExecution(ctx context.Context, request *shared.ResetWorkflowExecutionRequest, opts ...yarpc.CallOption) error {
+func (w *workflowServiceMetricsWrapper) ResetWorkflowExecution(ctx context.Context, request *shared.ResetWorkflowExecutionRequest, opts ...yarpc.CallOption) (*shared.ResetWorkflowExecutionResponse, error) {
 	scope := w.getOperationScope(scopeNameResetWorkflowExecution)
-	err := w.service.ResetWorkflowExecution(ctx, request, opts...)
+	result, err := w.service.ResetWorkflowExecution(ctx, request, opts...)
 	scope.handleError(err)
-	return err
+	return result, err
 }
 
 func (w *workflowServiceMetricsWrapper) UpdateDomain(ctx context.Context, request *shared.UpdateDomainRequest, opts ...yarpc.CallOption) (*shared.UpdateDomainResponse, error) {

@@ -21298,6 +21298,122 @@ func (v *ResetWorkflowExecutionRequest) GetRequestId() (o string) {
 	return
 }
 
+type ResetWorkflowExecutionResponse struct {
+	RunId *string `json:"runId,omitempty"`
+}
+
+// ToWire translates a ResetWorkflowExecutionResponse struct into a Thrift-level intermediate
+// representation. This intermediate representation may be serialized
+// into bytes using a ThriftRW protocol implementation.
+//
+// An error is returned if the struct or any of its fields failed to
+// validate.
+//
+//   x, err := v.ToWire()
+//   if err != nil {
+//     return err
+//   }
+//
+//   if err := binaryProtocol.Encode(x, writer); err != nil {
+//     return err
+//   }
+func (v *ResetWorkflowExecutionResponse) ToWire() (wire.Value, error) {
+	var (
+		fields [1]wire.Field
+		i      int = 0
+		w      wire.Value
+		err    error
+	)
+
+	if v.RunId != nil {
+		w, err = wire.NewValueString(*(v.RunId)), error(nil)
+		if err != nil {
+			return w, err
+		}
+		fields[i] = wire.Field{ID: 10, Value: w}
+		i++
+	}
+
+	return wire.NewValueStruct(wire.Struct{Fields: fields[:i]}), nil
+}
+
+// FromWire deserializes a ResetWorkflowExecutionResponse struct from its Thrift-level
+// representation. The Thrift-level representation may be obtained
+// from a ThriftRW protocol implementation.
+//
+// An error is returned if we were unable to build a ResetWorkflowExecutionResponse struct
+// from the provided intermediate representation.
+//
+//   x, err := binaryProtocol.Decode(reader, wire.TStruct)
+//   if err != nil {
+//     return nil, err
+//   }
+//
+//   var v ResetWorkflowExecutionResponse
+//   if err := v.FromWire(x); err != nil {
+//     return nil, err
+//   }
+//   return &v, nil
+func (v *ResetWorkflowExecutionResponse) FromWire(w wire.Value) error {
+	var err error
+
+	for _, field := range w.GetStruct().Fields {
+		switch field.ID {
+		case 10:
+			if field.Value.Type() == wire.TBinary {
+				var x string
+				x, err = field.Value.GetString(), error(nil)
+				v.RunId = &x
+				if err != nil {
+					return err
+				}
+
+			}
+		}
+	}
+
+	return nil
+}
+
+// String returns a readable string representation of a ResetWorkflowExecutionResponse
+// struct.
+func (v *ResetWorkflowExecutionResponse) String() string {
+	if v == nil {
+		return "<nil>"
+	}
+
+	var fields [1]string
+	i := 0
+	if v.RunId != nil {
+		fields[i] = fmt.Sprintf("RunId: %v", *(v.RunId))
+		i++
+	}
+
+	return fmt.Sprintf("ResetWorkflowExecutionResponse{%v}", strings.Join(fields[:i], ", "))
+}
+
+// Equals returns true if all the fields of this ResetWorkflowExecutionResponse match the
+// provided ResetWorkflowExecutionResponse.
+//
+// This function performs a deep comparison.
+func (v *ResetWorkflowExecutionResponse) Equals(rhs *ResetWorkflowExecutionResponse) bool {
+	if !_String_EqualsPtr(v.RunId, rhs.RunId) {
+		return false
+	}
+
+	return true
+}
+
+// GetRunId returns the value of RunId if it is set or its
+// zero value if it is unset.
+func (v *ResetWorkflowExecutionResponse) GetRunId() (o string) {
+	if v.RunId != nil {
+		return *v.RunId
+	}
+
+	return
+}
+
 type RespondActivityTaskCanceledByIDRequest struct {
 	Domain     *string `json:"domain,omitempty"`
 	WorkflowID *string `json:"workflowID,omitempty"`

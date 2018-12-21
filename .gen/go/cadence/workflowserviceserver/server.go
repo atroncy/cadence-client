@@ -117,7 +117,7 @@ type Interface interface {
 	ResetWorkflowExecution(
 		ctx context.Context,
 		ResetRequest *shared.ResetWorkflowExecutionRequest,
-	) error
+	) (*shared.ResetWorkflowExecutionResponse, error)
 
 	RespondActivityTaskCanceled(
 		ctx context.Context,
@@ -384,7 +384,7 @@ func New(impl Interface, opts ...thrift.RegisterOption) []transport.Procedure {
 					Type:  transport.Unary,
 					Unary: thrift.UnaryHandler(h.ResetWorkflowExecution),
 				},
-				Signature:    "ResetWorkflowExecution(ResetRequest *shared.ResetWorkflowExecutionRequest)",
+				Signature:    "ResetWorkflowExecution(ResetRequest *shared.ResetWorkflowExecutionRequest) (*shared.ResetWorkflowExecutionResponse)",
 				ThriftModule: cadence.ThriftModule,
 			},
 
@@ -861,10 +861,10 @@ func (h handler) ResetWorkflowExecution(ctx context.Context, body wire.Value) (t
 		return thrift.Response{}, err
 	}
 
-	err := h.impl.ResetWorkflowExecution(ctx, args.ResetRequest)
+	success, err := h.impl.ResetWorkflowExecution(ctx, args.ResetRequest)
 
 	hadError := err != nil
-	result, err := cadence.WorkflowService_ResetWorkflowExecution_Helper.WrapResponse(err)
+	result, err := cadence.WorkflowService_ResetWorkflowExecution_Helper.WrapResponse(success, err)
 
 	var response thrift.Response
 	if err == nil {

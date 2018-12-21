@@ -594,7 +594,7 @@ func (m *MockClient) ResetWorkflowExecution(
 	ctx context.Context,
 	_ResetRequest *shared.ResetWorkflowExecutionRequest,
 	opts ...yarpc.CallOption,
-) (err error) {
+) (success *shared.ResetWorkflowExecutionResponse, err error) {
 
 	args := []interface{}{ctx, _ResetRequest}
 	for _, o := range opts {
@@ -602,6 +602,8 @@ func (m *MockClient) ResetWorkflowExecution(
 	}
 	i := 0
 	ret := m.ctrl.Call(m, "ResetWorkflowExecution", args...)
+	success, _ = ret[i].(*shared.ResetWorkflowExecutionResponse)
+	i++
 	err, _ = ret[i].(error)
 	return
 }

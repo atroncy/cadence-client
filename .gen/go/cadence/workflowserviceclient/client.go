@@ -136,7 +136,7 @@ type Interface interface {
 		ctx context.Context,
 		ResetRequest *shared.ResetWorkflowExecutionRequest,
 		opts ...yarpc.CallOption,
-	) error
+	) (*shared.ResetWorkflowExecutionResponse, error)
 
 	RespondActivityTaskCanceled(
 		ctx context.Context,
@@ -619,7 +619,7 @@ func (c client) ResetWorkflowExecution(
 	ctx context.Context,
 	_ResetRequest *shared.ResetWorkflowExecutionRequest,
 	opts ...yarpc.CallOption,
-) (err error) {
+) (success *shared.ResetWorkflowExecutionResponse, err error) {
 
 	args := cadence.WorkflowService_ResetWorkflowExecution_Helper.Args(_ResetRequest)
 
@@ -634,7 +634,7 @@ func (c client) ResetWorkflowExecution(
 		return
 	}
 
-	err = cadence.WorkflowService_ResetWorkflowExecution_Helper.UnwrapResponse(&result)
+	success, err = cadence.WorkflowService_ResetWorkflowExecution_Helper.UnwrapResponse(&result)
 	return
 }
 
